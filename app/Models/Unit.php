@@ -12,17 +12,8 @@ class Unit extends Model
         'unit_letter_code'
     ];
 
-    protected $appends = [
-        'merge_unit'
-    ];
-
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
-    }
-
-    public function getAttributesMergeUnit(): string
-    {
-        return $this->name . '(' . $this->unit_letter_code . ')';
     }
 }

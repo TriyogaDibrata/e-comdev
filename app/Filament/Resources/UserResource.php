@@ -66,7 +66,7 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('avatar')->circular(),
+                // Tables\Columns\ImageColumn::make('avatar')->circular(),
             ])
             ->filters([
                 //

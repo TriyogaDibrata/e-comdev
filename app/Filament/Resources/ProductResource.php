@@ -62,20 +62,8 @@ class ProductResource extends Resource
                                     ->options(Unit::all()->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload(),
-                                RichEditor::make('description')->columnSpanFull()
-                                    ->toolbarButtons([
-                                        'blockquote',
-                                        'bold',
-                                        'bulletList',
-                                        'codeBlock',
-                                        'h2',
-                                        'h3',
-                                        'italic',
-                                        'link',
-                                        'orderedList',
-                                        'strike',
-                                        'underline',
-                                    ]),
+                                Textarea::make('description')->columnSpanFull()
+                                    ->rows(5),
                                 TextInput::make('price_per_unit')
                                     ->prefix('IDR')
                                     ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2),
@@ -112,7 +100,11 @@ class ProductResource extends Resource
                 })->formatStateUsing(fn(int $state) => match ($state) {
                     1 => 'In Stocks',
                     0 => 'Out of Stocks'
-                }),
+                })
+                    ->icon(fn(int $state) => match ($state) {
+                        1 => 'heroicon-o-check-circle',
+                        0 => 'heroicon-o-x-circle'
+                    }),
                 SpatieMediaLibraryImageColumn::make('media')->label('Images')->circular()->stacked()->limit(2)
             ])
             ->filters([
