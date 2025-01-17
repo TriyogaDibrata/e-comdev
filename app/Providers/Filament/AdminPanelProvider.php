@@ -2,12 +2,14 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\auth\Register;
 use App\Filament\Resources\OrderResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Resources\ProductCategoryResource;
 use App\Filament\Resources\ProductResource;
 use App\Filament\Resources\UnitResource;
 use App\Filament\Resources\UserResource;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
@@ -32,6 +34,9 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
+use Jeffgreco13\FilamentBreezy\Pages\MyProfilePage;
+use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
+use Joaopaulolndev\FilamentGeneralSettings\Pages\GeneralSettingsPage;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -42,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->registration(Register::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -85,6 +91,16 @@ class AdminPanelProvider extends PanelProvider
                                 NavigationItem::make('Roles')
                                     ->url(fn(): string => RoleResource::getUrl())
                                     ->isActiveWhen(fn(): bool => request()->routeIs('filament.admin.resources.roles.*'))
+                            ]),
+                        NavigationGroup::make('Settings')
+                            ->icon('heroicon-o-cog-6-tooth')
+                            ->items([
+                                NavigationItem::make('General Setting')
+                                    ->url(fn(): string => GeneralSettingsPage::getUrl())
+                                    ->isActiveWhen(fn(): bool => request()->routeIs('filament.admin.pages.general-settings-page')),
+                                NavigationItem::make('Profile')
+                                    ->url(fn(): string => MyProfilePage::getUrl())
+                                    ->isActiveWhen(fn(): bool => request()->routeIs('filament.admin.pages.my-profile'))
                             ])
                     ]);
             })
@@ -102,6 +118,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                RedirectIfAuthenticated::class
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
@@ -127,6 +144,7 @@ class AdminPanelProvider extends PanelProvider
                         'default' => 1,
                         'sm' => 2,
                     ]),
+                FilamentGeneralSettingsPlugin::make()
             ]);
     }
 }

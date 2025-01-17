@@ -27,6 +27,22 @@
                     <a href="{{ route('cart') }}"
                         class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('cart') ? 'text-orange-400' : '' }}">Cart</a>
                 </li>
+                @auth
+                    <li>
+                        <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
+                            @csrf
+                            <a href="{{ route('filament.admin.auth.logout') }}"
+                                onclick="event.preventDefault();
+                            this.closest('form').submit();"
+                                class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('cart') ? 'text-orange-400' : '' }}">Logout</a>
+                        </form>
+                    </li>
+                @else
+                    <li>
+                        <a href=""
+                            class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('cart') ? 'text-orange-400' : '' }}">Login</a>
+                    </li>
+                @endauth
             </ul>
         </div>
     </div>

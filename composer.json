@@ -19,8 +19,10 @@
         "filament/widgets": "^3.2",
         "hasnayeen/themes": "^3.0",
         "jeffgreco13/filament-breezy": "^2.4",
+        "joaopaulolndev/filament-general-settings": "^1.0",
         "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "ysfkaya/filament-phone-input": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
