@@ -16,13 +16,18 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
+        // if (Auth::guard($guard)->check()) {
+        //     $user = Auth::guard($guard)->user();
+        //     if ($user->hasRole('admin')) {
+        //         return redirect()->route('filament.admin.pages.dashboard');
+        //     } else {
+        //         return redirect()->route('landing');
+        //     }
+        // }
         if (Auth::guard($guard)->check()) {
-            $user = Auth::guard($guard)->user();
-            if ($user->hasRole('admin')) {
-                return redirect()->route('filament.admin.pages.dashboard');
-            } else {
-                return redirect()->route('landing');
-            }
+            return redirect()->route('landing');
+        } else {
+            return redirect()->route('login');
         }
 
         return $next($request);

@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\auth\Register;
 use App\Filament\Resources\OrderResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Resources\ProductCategoryResource;
@@ -47,7 +46,6 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->registration(Register::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -118,7 +116,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RedirectIfAuthenticated::class
+                // RedirectIfAuthenticated::class
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),

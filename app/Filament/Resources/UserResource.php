@@ -41,9 +41,10 @@ class UserResource extends Resource
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('password')
                                     ->password()
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->revealable(),
+                                    ->revealable()
+                                    ->required(fn($livewire) => $livewire instanceof \App\Filament\Resources\UserResource\Pages\CreateUser)
+                                    ->dehydrateStateUsing(fn($state) => $state ? bcrypt($state) : null) // Hash password if provided
+                                    ->nullable(fn($livewire) => $livewire instanceof \App\Filament\Resources\UserResource\Pages\EditUser),
                             ])
                             ->columns(2),
                         Tab::make('Access Management')
@@ -63,6 +64,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),

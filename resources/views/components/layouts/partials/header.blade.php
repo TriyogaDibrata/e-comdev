@@ -12,37 +12,63 @@
                     d="M1 1h15M1 7h15M1 13h15" />
             </svg>
         </button>
-        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-            <ul
-                class="font-medium flex flex-col p-3 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white font-nunito">
-                <li>
-                    <a href="{{ route('landing') }}" wire:navigate
-                        class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('landing') ? 'text-orange-400' : '' }}">Home</a>
-                </li>
-                <li>
-                    <a href="{{ route('catalogue') }}"
-                        class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('catalogue') ? 'text-orange-400' : '' }}">Catalogue</a>
-                </li>
-                <li>
-                    <a href="{{ route('cart') }}"
-                        class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('cart') ? 'text-orange-400' : '' }}">Cart</a>
-                </li>
-                @auth
+        <div class="flex justify-arround items-center">
+            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                <ul
+                    class="font-medium flex flex-col p-3 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white font-nunito">
                     <li>
-                        <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
-                            @csrf
-                            <a href="{{ route('filament.admin.auth.logout') }}"
-                                onclick="event.preventDefault();
-                            this.closest('form').submit();"
-                                class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('cart') ? 'text-orange-400' : '' }}">Logout</a>
-                        </form>
+                        <a href="{{ route('landing') }}" wire:navigate
+                            class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('landing') ? 'text-orange-400' : '' }}">Home</a>
                     </li>
-                @else
                     <li>
-                        <a href=""
-                            class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('cart') ? 'text-orange-400' : '' }}">Login</a>
+                        <a href="{{ route('product') }}"
+                            class="block py-2 px-3 text-black font-semibold rounded md:bg-transparent md:p-0 hover:text-orange-600 {{ request()->routeIs('product') ? 'text-orange-400' : '' }}">Products</a>
                     </li>
-                @endauth
+                </ul>
+            </div>
+            @auth
+                <button type="button"
+                    class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
+                    <span class="sr-only">Open user menu</span>
+                    <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                        alt="user photo">
+                </button>
+            @endauth
+        </div>
+        <div class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+            id="dropdown">
+            <div class="py-3 px-4">
+                @if (Auth::user())
+                    <span
+                        class="block text-sm font-semibold text-gray-900 dark:text-white">{{ Auth::user()->name }}</span>
+                    <span
+                        class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ Auth::user()->email }}</span>
+                @endif
+            </div>
+            <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+                <li>
+                    <a href="#"
+                        class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">My
+                        profile</a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Account
+                        settings</a>
+                </li>
+            </ul>
+            <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="{{ route('logout') }}" class="btn-secondary"
+                            onclick="event.preventDefault();
+      this.closest('form').submit();">
+                            Log Out
+                        </a>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

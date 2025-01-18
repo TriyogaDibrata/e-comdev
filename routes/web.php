@@ -1,15 +1,36 @@
 <?php
 
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\ProductDetailController;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register as AuthRegister;
 use App\Livewire\LandingPage;
+use App\Livewire\Pages\ProductDetail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/login', Login::class)->name('login');
+Route::get('/register', AuthRegister::class)->name('register');
+Route::post('/logout', function () {
+    if (Auth::user()) {
+        Auth::logout();
+    }
+    return redirect()->route('landing');
+})->name('logout');
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-Route::get('/catalog', function () {
-    return view('pages.catalogue');
-})->name('catalogue');
+Route::get('/product', function () {
+    return view('pages.products');
+})->name('product');
 
-Route::get('/cart', function () {
-    return view('pages.cart');
-})->name('cart');
+Route::get('/product/{slug}', [ProductDetailController::class, 'index'])->name('product.detail');
+
+
+Route::middleware([RedirectIfAuthenticated::class])->group(function () {
+    Route::get('/cart', function () {
+        return view('pages.cart');
+    })->name('cart');
+});

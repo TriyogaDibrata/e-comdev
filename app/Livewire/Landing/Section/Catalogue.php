@@ -14,7 +14,7 @@ class Catalogue extends Component
 
     public function getProducts()
     {
-        $product = Product::with('media')->where('stock_status', 1)->get()->take(3);
+        $product = Product::with('media', 'unit')->where('stock_status', 1)->get()->take(3);
 
         return $product;
     }

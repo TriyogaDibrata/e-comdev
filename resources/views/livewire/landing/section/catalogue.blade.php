@@ -14,15 +14,11 @@
                             alt="product image" />
                     </a>
                     <div class="px-5 pb-5">
-                        <a href="#">
-                            <h5 class="text-xl font-semibold tracking-tight text-gray-900">{{ $product->name }}</h5>
-                        </a>
-                        <p class="text-sm font-thin line-clamp-2 mb-3">{{ $product->description }}</p>
-                        <div class="flex items-center justify-between">
-                            <a href="#"
-                                class="text-white bg-orange-500 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Add
-                                to cart</a>
-                            <div class="flex items-center mt-2.5 mb-5">
+                        <div class="flex flex-row justify-between items-center">
+                            <div class="text-sm font-thin">
+                                {{ 'IDR ' . number_format($product->price_per_unit, 0, ',', '.') . '/' . $product->unit->unit_letter_code }}
+                            </div>
+                            <div class="flex justify-end my-4">
                                 <div class="flex items-center space-x-1 rtl:space-x-reverse">
                                     <svg class="w-4 h-4 text-yellow-300" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -34,11 +30,20 @@
                                     class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-3">5.0</span>
                             </div>
                         </div>
+                        <a href="#">
+                            <h5 class="text-xl font-semibold tracking-tight text-gray-900">{{ $product->name }}</h5>
+                        </a>
+                        <p class="text-sm font-thin line-clamp-2 mb-3">{{ $product->description }}</p>
+                        <div class="flex items-center justify-end">
+                            <a href="#"
+                                class="text-white bg-orange-500 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Detail</a>
+                        </div>
                     </div>
                 </div>
             @endforeach
-
-
+        </div>
+        <div class="w-full mx-auto flex justify-center items-center my-6">
+            <a class="text-orange-500 hover:text-orange-600" href="{{ route('product') }}">See More</a>
         </div>
     </div>
 </section>
