@@ -18,6 +18,11 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,25 +43,14 @@ class OrderResource extends Resource
                     'lg' => 12
                 ])
                     ->schema([
-                        Section::make('User Info')
+                        Section::make('Customer')
                             ->schema([
                                 Select::make('user_id')->label('User')
                                     ->relationship(name: 'user', titleAttribute: 'name')
                                     ->searchable()
-                                    ->lazy()
-                                    ->afterStateUpdated(function (Get $get, Set $set) {
-                                        $user = User::find($get('user_id'));
-                                        if ($user) {
-                                            $set('phone', $user->phone);
-                                            $set('email', $user->email);
-                                        }
-                                    }),
-                                Forms\Components\TextInput::make('phone')
-                                    ->label('Phone')
-                                    ->readOnly()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('email')
-                                    ->label('Email')
+                                    ->lazy(),
+                                Forms\Components\TextInput::make('shipping_address')
+                                    ->label('Address')
                                     ->readOnly()
                                     ->maxLength(255),
                             ])->columnSpan(12)->collapsible()->collapsed(fn($record) => $record),
@@ -116,10 +110,22 @@ class OrderResource extends Resource
                             ])->columnSpan(12)->collapsible(),
                         Section::make('Summary')
                             ->schema([
+                                Select::make('payment_method')->label('Payment Method')
+                                    ->relationship(name: 'paymentMethod', titleAttribute: 'name')
+                                    ->searchable()
+                                    ->lazy(),
                                 TextInput::make('total')
+                                    ->label('Total Price')
+                                    ->numeric()
+                                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2),
+                                TextInput::make('tax')
+                                    ->label('Tax(11%)')
+                                    ->numeric()
+                                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2),
+                                TextInput::make('grand_total')
                                     ->label('Grand Total')
                                     ->numeric()
-                                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2)
+                                    ->currencyMask(thousandSeparator: '.', decimalSeparator: ',', precision: 2),
                             ])->columnSpan(12)->collapsible()->collapsed(fn($record) => $record),
                     ])
             ]);
@@ -128,16 +134,43 @@ class OrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(Order::query()->orderBy('created_at', 'desc'))
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('user.name')->label('Customer')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('total')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')->label('Order Status')->badge()->color(fn(int $state): string => match ($state) {
+                    0 => 'warning',
+                    1 => 'info',
+                    2 => 'gray',
+                    3 => 'success',
+                    4 => 'danger'
+                })->formatStateUsing(fn(int $state) => match ($state) {
+                    0 => 'Pending',
+                    1 => 'Process',
+                    2 => 'Delivering',
+                    3 => 'Finished',
+                    4 => 'Cancled'
+                })
+                    ->icon(fn(int $state) => match ($state) {
+                        0 => 'heroicon-o-clock',
+                        1 => 'heroicon-o-clock',
+                        2 => 'heroicon-o-truck',
+                        3 => 'heroicon-o-check-circle',
+                        4 => 'heroicon-o-x-circle'
+                    }),
+                Tables\Columns\TextColumn::make('payment_status')->label('Payment Status')->badge()->color(fn(int $state): string => match ($state) {
+                    0 => 'warning',
+                    1 => 'success',
+                })->formatStateUsing(fn(int $state) => match ($state) {
+                    0 => 'Pending',
+                    1 => 'Confirmed',
+                })
+                    ->icon(fn(int $state) => match ($state) {
+                        0 => 'heroicon-o-clock',
+                        1 => 'heroicon-o-check-circle',
+                    }),
+                Tables\Columns\TextColumn::make('grand_total')->currency('IDR')->label('Total'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -151,7 +184,49 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                    Action::make('Confirm Payment')
+                        ->action(function (Order $record): void {
+                            $record->payment_status = 1;
+                            $record->save();
+                        })
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->visible(function (Order $record) {
+                            return $record->payment_status === 0;
+                        }),
+                    Action::make('updateStatus')
+                        ->label('Update Order Status')
+                        ->fillForm(fn(Order $record): array => [
+                            'status' => $record->status,
+                        ])
+                        ->form([
+                            Select::make('status')
+                                ->label('Status')
+                                ->options([
+                                    0 => "Pending",
+                                    1 => "Confirm",
+                                    2 => "Delivering",
+                                    3 => "Finished",
+                                    4 => "Cancled"
+                                ])
+                                ->preload()
+                                ->searchable()
+                                ->required(),
+                        ])
+                        ->action(function (array $data, Order $record): void {
+                            $record->status = $data['status'];
+                            $record->save();
+                        })
+                        ->icon('heroicon-o-check-circle')
+                        ->color('primary')
+                ])->button()
+                    ->label('Actions')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

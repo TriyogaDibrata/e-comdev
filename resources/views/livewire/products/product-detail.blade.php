@@ -34,10 +34,9 @@
                 <button wire:click="increment" class="bg-orange-200 py-2 px-4 rounded text-orange-500">+</button>
             </div>
 
-            <button wire:click="addToCart">Add to cart</button>
+            <button class="bg-orange-500 rounded-md w-full py-2 text-white hover:bg-orange-600"
+                wire:click="addToCart">{{ $this->btnText }}</button>
         </div>
     </div>
 
-
-</div>
 </div>

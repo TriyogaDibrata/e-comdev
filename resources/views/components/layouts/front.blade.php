@@ -33,16 +33,48 @@
         <x-header></x-header>
     </header>
 
-    <main class="pt-24">
+    <main class="pt-24 min-h-screen">
         {{ $slot }}
     </main>
 
     <footer>
-        <x-footer></x-footer> {{-- Uncomment when ready to use --}}
+        {{-- <x-footer></x-footer>  --}}
     </footer>
 
     @livewireScripts
     @vite('resources/js/front.js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Livewire.on('show-swal', function(data) {
+                var data = data[0];
+                Swal.fire({
+                    title: data.title,
+                    text: data.text,
+                    icon: data.icon,
+                    confirmButtonText: 'OK'
+                });
+            });
+
+            Livewire.on('show-toast', function(data) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                var data = data[0];
+                Toast.fire({
+                    icon: data.icon,
+                    title: data.title
+                });
+            });
+        });
+    </script>
     @stack('js')
 </body>
 

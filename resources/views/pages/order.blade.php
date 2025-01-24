@@ -1,3 +1,3 @@
 <x-front-layout>
-    @livewire('cart.cart-items')
+    @livewire('orders.order-list')
 </x-front-layout>

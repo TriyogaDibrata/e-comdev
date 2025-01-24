@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Livewire\Auth\Login;
@@ -29,8 +30,14 @@ Route::get('/product', function () {
 Route::get('/product/{slug}', [ProductDetailController::class, 'index'])->name('product.detail');
 
 
-Route::middleware([RedirectIfAuthenticated::class])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/cart', function () {
         return view('pages.cart');
     })->name('cart');
+
+    Route::get('/order', function () {
+        return view('pages.order');
+    })->name('order');
+
+    Route::get('/order/{ticket}', [OrderDetailController::class, 'index'])->name('order.detail');
 });

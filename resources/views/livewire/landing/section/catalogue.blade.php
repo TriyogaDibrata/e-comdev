@@ -35,7 +35,7 @@
                         </a>
                         <p class="text-sm font-thin line-clamp-2 mb-3">{{ $product->description }}</p>
                         <div class="flex items-center justify-end">
-                            <a href="#"
+                            <a href="{{ route('product.detail', $product->slug) }}"
                                 class="text-white bg-orange-500 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Detail</a>
                         </div>
                     </div>

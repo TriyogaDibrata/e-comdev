@@ -1,3 +1,3 @@
 <x-front-layout>
-    @livewire('pages.product-detail', ['slug' => $slug])
+    @livewire('products.product-detail', ['slug' => $slug])
 </x-front-layout>

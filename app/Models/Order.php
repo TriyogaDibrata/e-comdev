@@ -5,14 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
     protected $fillable = [
         'user_id',
+        'ticket',
         'status',
         'total',
+        'tax',
+        'grand_total',
+        'shipping_address',
+        'payment_method',
+        'payment_status'
     ];
 
     public function user(): BelongsTo
@@ -25,8 +30,8 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function payment(): HasOne
+    public function paymentMethod(): BelongsTo
     {
-        return $this->hasOne(Payment::class);
+        return $this->belongsTo(PaymentMethod::class, 'payment_method');
     }
 }

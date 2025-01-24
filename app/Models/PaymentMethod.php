@@ -12,8 +12,8 @@ class PaymentMethod extends Model
         'account_no'
     ];
 
-    public function payments(): HasMany
+    public function orders(): HasMany
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Order::class);
     }
 }
