@@ -1,7 +1,7 @@
 <nav class="bg-white border-gray-200 w-full p-4 fixed top-0 z-50">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="{{ route('landing') }}" class="flex flex-row items-center space-x-3 rtl:space-x-reverse">
-            <img src="{{ asset('images/fish-vector-green.webp') }}" class="h-8" alt="Logo" />
+            <img src="{{ asset('images/logo_de.png') }}" class="h-8" alt="Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap hidden md:block">
                 Devrillia Seafood
             </span>
@@ -35,7 +35,7 @@
                                 <p class="text-xs font-thin">{{ Auth::user()->email }}</p>
                             </div>
                             <img class="h-10 w-10 rounded-full object-contain bg-orange-200"
-                                src="{{ asset('images/fish-vector-blue.webp') }}" />
+                                src="{{ Auth::user()->avatar ? Auth::user()->avatar : asset('images/user-icon.png') }}" />
                         </button>
                         <!-- Dropdown menu -->
                         <div id="dropdownNavbar"
