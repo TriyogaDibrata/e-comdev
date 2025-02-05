@@ -8,4 +8,11 @@ export default {
         "./vendor/filament/**/*.blade.php",
     ],
     plugins: [require("flowbite/plugin")],
+    theme: {
+        extend: {
+            boxShadow: {
+                "round-shadow": "0px 8px 24px",
+            },
+        },
+    },
 };

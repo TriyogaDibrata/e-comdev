@@ -38,7 +38,7 @@
     </main>
 
     <footer>
-        {{-- <x-footer></x-footer>  --}}
+        <x-footer></x-footer>
     </footer>
 
     @livewireScripts

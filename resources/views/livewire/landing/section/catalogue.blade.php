@@ -9,7 +9,7 @@
 
             @foreach ($this->getProducts() as $product)
                 <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg card-shadow">
-                    <a href="#">
+                    <a href="{{ route('product.detail', $product->slug) }}">
                         <img class="rounded-t-lg w-full object-cover mb-2 h-52" src="{{ $product->media[0]->getUrl() }}"
                             alt="product image" />
                     </a>

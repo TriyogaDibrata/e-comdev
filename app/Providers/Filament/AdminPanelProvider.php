@@ -8,7 +8,6 @@ use App\Filament\Resources\ProductCategoryResource;
 use App\Filament\Resources\ProductResource;
 use App\Filament\Resources\UnitResource;
 use App\Filament\Resources\UserResource;
-use App\Http\Middleware\RedirectIfAuthenticated;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;

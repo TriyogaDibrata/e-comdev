@@ -5,22 +5,27 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use Joaopaulolndev\FilamentGeneralSettings\Services\GeneralSettingsService;
 
 class Footer extends Component
 {
+    protected $generalSettingsService;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(GeneralSettingsService $generalSettingsService)
     {
-        //
+        $this->generalSettingsService = $generalSettingsService;
     }
+
 
     /**
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string
     {
-        return view('components.layouts.partials.footer');
+        $general = $this->generalSettingsService->get();
+        return view('components.layouts.partials.footer', ['general' => $general]);
     }
 }
