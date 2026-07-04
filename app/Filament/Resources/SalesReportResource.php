@@ -126,7 +126,7 @@ class SalesReportResource extends Resource
                     ->color('success')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->exports([
-                        ExcelExport::make('Laporan Penjualan')->fromTable()
+                        ExcelExport::make('Laporan Penjualan')->fromTable()->withFilename(now()->format('Y-m-d_H-i-s') . '_laporan-penjualan.xlsx')
                     ]),
             ])
             ->defaultSort('created_at', 'desc');
