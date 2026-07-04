@@ -6,6 +6,7 @@ use App\Filament\Resources\OrderResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use App\Filament\Resources\ProductCategoryResource;
 use App\Filament\Resources\ProductResource;
+use App\Filament\Resources\SalesReportResource;
 use App\Filament\Resources\UnitResource;
 use App\Filament\Resources\UserResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource;
@@ -56,14 +57,15 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop(true)
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
                 return $builder
                     ->items([
                         ...Dashboard::getNavigationItems(),
-                        ...OrderResource::getNavigationItems()
+                        ...OrderResource::getNavigationItems(),
+                        ...SalesReportResource::getNavigationItems(),
                     ])
                     ->groups([
                         NavigationGroup::make('Master Data Products')
